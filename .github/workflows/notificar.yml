@@ -1,0 +1,25 @@
+# .github/workflows/notificar.yml
+name: Notificar push por correo
+on:
+  push:
+    branches: [main, feature_a, feature_b]
+
+jobs:
+  notificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar correo
+        uses: dawidd6/action-send-mail@v16   # revisen la versión más reciente en el Marketplace
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: Cambios subidos a rama ${{ github.ref_name }}
+          to: oswaldo.oseguera123xd@gmail.com, abimaelgm@outlook.com
+          from: GitHub Actions <${{ secrets.MAIL_USERNAME }}>
+          body: |
+            Autor: ${{ github.actor }}
+            Commit: ${{ github.sha }}
+            Mensaje: ${{ github.event.head_commit.message }}
